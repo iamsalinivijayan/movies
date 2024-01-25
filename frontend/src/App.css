@@ -1,0 +1,80 @@
+
+body, html {
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  opacity: 1;
+}
+h1{
+  text-align: center;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.bg-img {
+  /* The image used */
+  background-image: url('https://getwallpapers.com/wallpaper/full/1/9/7/1267872-movie-poster-wallpaper-1920x1080-for-samsung-galaxy.jpg');
+
+  min-height: 720px;
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+.dashboard-img {
+  /* The image used */
+  background-image: url('https://miro.medium.com/v2/resize:fit:1200/1*OGqgHK1soFSMpjeM8Fq00w.png');
+
+  min-height: 720px;
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+/* Add styles to the form container */
+.container {
+  position:absolute;
+  top: 20%;
+  right: 35%;
+  margin: 20px;
+  max-width: 300px;
+  padding: 16px;
+  background-color: #BFCFE7;
+  opacity: 85%;
+}
+
+/* Full-width input fields */
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #FAEED1;
+  opacity: 1;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+  opacity: 1;
+}
+
+/* Set a style for the submit button */
+.btn {
+  background-color: #11235A;
+  color: white;
+  padding: 16px 20px;
+  margin: 3px 0 10px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: .9;
+}
+
+.btn:hover {
+  opacity: 1;
+}
