@@ -6,6 +6,10 @@ const cors = require('cors')
 const connectDb = require('./config/dbConnection')
 // importing and configuring dotenv 
 const dotenv = require('dotenv').config()
+// importing cookie parser
+const cookieParser = require('cookie-parser');
+// importing authentication middleware
+const authentication = require('./middleware/authentication');
 
 // Function call to connect server with db
 connectDb();
@@ -17,15 +21,20 @@ const app = express()
 const port = process.env.PORT
 
 // middleware to enable cross origin requests
-app.use(cors());
+app.use(cors({origin: true, credentials: true}));
 
 // Middleware to parse json data in the request body
 app.use(express.json())
+// setting cookie parser
+app.use(cookieParser())
 // Setting up middleware to handle URL-encoded data
 app.use(express.urlencoded({extended:true}))
 
 // Route handlers
+// route handler for signup and login
 app.use('/', require('./routes/authRoutes'))
+// route handler for dashboard and movies section
+app.use('/customer', authentication ,require('./routes/customerRoutes'))
 
 // listen method is called to start the server 
 app.listen(port, () => {

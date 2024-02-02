@@ -1,11 +1,15 @@
 import axios from 'axios'; //importing axios
-import React, { useState } from 'react'; //importing usestate hook to use and manage states 
+import React, { useContext, useState } from 'react'; //importing usestate hook to use and manage states 
 import { useNavigate } from 'react-router-dom'; //importing usenavigate to navigate through pages
+import UserContext from '../Context/userContext';
 
 // Login component definition
 const Login = () => {
   // Hook to enable navigation between pages
   const navigate = useNavigate();
+
+  // state to manage user using context api
+  const { user, setUser } = useContext(UserContext);
 
   // State to manage form data 
   const [data, setData] = useState({
@@ -51,16 +55,21 @@ const Login = () => {
     // upon successful validation
     if (validateForm()) {
       try {
+        console.log("User Context", user)
         // Sending a POST request to the server for login
         const response = await axios.post('http://localhost:3001/login', {
           email: data.email,
-          password: data.password,
-        });
+          password: data.password},{withCredentials: true});
 
         // Logging response and navigating to the home page upon successful login
+        if (response.status === 200) {
+        setUser({user: true});
+        console.log("User context after",user)
         console.log('Response:', response)
-        // navigating to home
-        navigate('/home');
+        // navigating to customer dashboard
+        navigate('/dashboard');
+        }
+        
       } catch (error) {
         // Handling errors and displaying appropriate messages
         if (error.response && error.response.status) {

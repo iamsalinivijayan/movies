@@ -2,12 +2,19 @@
 import { Route, Routes } from 'react-router-dom';
 
 // Importing specific components for routing
-import Home from './Components/Home';
 import Signup from './Components/Signup';
 import Login from './Components/Login';
 
 // Importing the stylesheet for the App component
 import './App.css';
+// importing component dashboard from components
+import Dashboard from './Components/Dashboard';
+// importing element Movie from elements
+import Movie from './Elements/Movie'
+
+// importing Layout
+import Layout from './Layout/Layout';
+
 
 // Main App component definition
 function App() {
@@ -21,9 +28,15 @@ function App() {
 
         {/* Route for the Login component */}
         <Route path='/login' element={<Login />} />
-
+        <Route element= {<Layout/>}>
         {/* Route for the Home component */}
-        <Route path='/home' element={<Home />} />
+        <Route path='/dashboard' element={<Dashboard />} />
+
+        {/* Route for movie element */}
+        <Route path="/customer/movies/:movieId" element={<Movie/>} />
+        {/* <Route path='/booking' element = {<Booking/>}/> */}
+        </Route>
+        
       </Routes>
     </div>
   );
