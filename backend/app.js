@@ -33,8 +33,11 @@ app.use(express.urlencoded({extended:true}))
 // Route handlers
 // route handler for signup and login
 app.use('/', require('./routes/authRoutes'))
+// admin route handlers
+app.use('/admin', require('./routes/adminRoutes'))
 // route handler for dashboard and movies section
 app.use('/customer', authentication ,require('./routes/customerRoutes'))
+
 
 // listen method is called to start the server 
 app.listen(port, () => {

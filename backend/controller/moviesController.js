@@ -1,14 +1,6 @@
 const Movies = require('../model/movieModel'); //Importing model of movies
+const Reviews = require('../model/reviewModel'); //Importing the review model
 
-// function to fetch movies from db
-const getMovies = async(req,res) => {
-    const allMovies = await Movies.find()
-    res.status(200).json(allMovies)
-}
-// function to add movies to db
-const addMovies = async(req,res) => {
-    
-}
 // function to fetch a particular movie
 const getMovie = async (req, res) => {
   try {
@@ -27,15 +19,61 @@ const getMovie = async (req, res) => {
   }
 };
 
+// function to add review
+const addReview = async(req, res) => {
+  const {review, user_id, movie_id} = req.body
+  // console.log("user id", user_id)
+  let reviewExists = 0
+  const reviews = await Reviews.find({user: user_id})
+  // console.log("reviews of user", reviews)
+  const existingReviews = reviews.map((reviewItem) => {
+    return reviewItem.movie
+  })
+  // console.log("Existing Reviews", existingReviews)
+  for(let movie of existingReviews){
+    if (movie == movie_id){
+      reviewExists ++
+    }
+  }
+  // console.log("Flag", reviewExists)
+  if (reviewExists === 0){
+    const movieReview = await Reviews.create({
+      review: review,
+      user: user_id,
+      movie: movie_id
+    })
+    res.status(200).json({review: movieReview})
+  }else{
+    res.status(200).json({review: "You have already reviewed this movie"})
+  }
+  }
+
+// Function to get All reviews
+const getReviews = async(req, res) => {
+  console.log("Request", req.params)
+  const {_id} = req.params._id
+  const reviews = await Reviews.find(_id)
+  res.status(200).json({Reviews: reviews})
+}
+
+// Function to edit review
+const editReview = async(req, res) => {
+  const {_id} = req.params
+  const {review} = req.body
   
-// function to edit movie
-const editMovie = async(req,res) => {
-
+  const updatedReview = await Reviews.findByIdAndUpdate(_id, {review: review}, { returnDocument: 'after' })
+  res.status(200).json({"Review updated": updatedReview})
 }
-// function to delete movie
-const deleteMovie = async(req,res) => {
+// Function to Delete review
+const deleteReview = async(req, res) => {
+  const {_id} = req.params
 
+  const deletereview = await Reviews.findByIdAndDelete(_id)
+  console.log("Deleted", deletereview)
+  res.status(200).json({"Message":"review deleted"})
 }
+
+
 
 // Exporting the functions 
-module.exports = {getMovies, addMovies, getMovie, editMovie, deleteMovie}
+module.exports = {getMovie, addReview, getReviews, editReview, deleteReview}

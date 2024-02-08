@@ -24,13 +24,9 @@ const movieSchema = new mongoose.Schema({
   rating:{
     type: Number
   },
-  reviews:{
-    type: [{
-      review: String
-    }],
-    default:[]
+  price:{
+    type: Number
   }
-
 });
 
 // Creating a model using the schema

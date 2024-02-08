@@ -14,6 +14,7 @@ import Movie from './Elements/Movie'
 
 // importing Layout
 import Layout from './Layout/Layout';
+import Booking from './Components/Booking';
 
 
 // Main App component definition
@@ -34,7 +35,8 @@ function App() {
 
         {/* Route for movie element */}
         <Route path="/customer/movies/:movieId" element={<Movie/>} />
-        {/* <Route path='/booking' element = {<Booking/>}/> */}
+
+        <Route path='/booking' element = {<Booking/>}/>
         </Route>
         
       </Routes>

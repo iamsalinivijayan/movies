@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import Navbar from '../Elements/Navbar'
 import UserContext from '../Context/userContext'
 
 const Booking = () => {
@@ -7,7 +6,6 @@ const Booking = () => {
     console.log("UserContext from Booking", user)
   return (
     <div>
-        <Navbar/>
     </div>
   )
 }
