@@ -10,6 +10,11 @@ const dotenv = require('dotenv').config()
 const cookieParser = require('cookie-parser');
 // importing authentication middleware
 const authentication = require('./middleware/authentication');
+// importing multer for file uploads
+const multer = require('multer');
+const adminauth = require('./middleware/adminauth');
+
+const upload = multer({dest: "uploads/"})
 
 // Function call to connect server with db
 connectDb();
@@ -29,12 +34,15 @@ app.use(express.json())
 app.use(cookieParser())
 // Setting up middleware to handle URL-encoded data
 app.use(express.urlencoded({extended:true}))
+// serve static files
+app.use('/uploads', express.static(__dirname+'/uploads'))
 
 // Route handlers
 // route handler for signup and login
 app.use('/', require('./routes/authRoutes'))
+
 // admin route handlers
-app.use('/admin', require('./routes/adminRoutes'))
+app.use('/admin', upload.single('file'), adminauth ,require('./routes/adminRoutes'))
 // route handler for dashboard and movies section
 app.use('/customer', authentication ,require('./routes/customerRoutes'))
 

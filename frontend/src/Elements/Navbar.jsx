@@ -4,6 +4,7 @@ import { useEffect, useContext} from "react";
 import UserContext from "../Context/userContext.js"
 import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
 import LogoutIcon from '@mui/icons-material/Logout';
+import HomeIcon from '@mui/icons-material/Home';
 
 const Navbar = () => {
   const { user, setUser } = useContext(UserContext);
@@ -14,7 +15,9 @@ const Navbar = () => {
     console.log("check auth", response);
 
     if (response.status === 200) {
-      setUser({ email: response.data.email});
+      setUser({ email: response.data.email, id: response.data.id, isAdmin: response.data.isAdmin});
+    } else{
+      navigate('/login')
     }
     console.log("context from navbar",user)
   };
@@ -29,11 +32,23 @@ const Navbar = () => {
       navigate('/login')
     }
   };
+
+  const goHome = () => {
+    navigate('/dashboard')
+  }
  
   return (
     <AppBar sx={{ position: 'relative', backgroundColor: '#3D0C11'}}>
     <Toolbar> 
-    <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+    <IconButton
+    color="inherit"
+    onClick={goHome}
+    aria-label="close"
+    sx={{ ml:2 , transform:'scale(1.5)' }}   
+    >
+      <HomeIcon/>
+    </IconButton>
+    <Typography sx={{ ml: 2, flex: 1, textAlign: 'right'}} variant="h6" component="div">
       {user?.email}
     </Typography>    
     <IconButton

@@ -19,9 +19,11 @@ const getMovie = async (req, res) => {
   }
 };
 
+
 // function to add review
 const addReview = async(req, res) => {
   const {review, user_id, movie_id} = req.body
+  console.log("request", req.body)
   // console.log("user id", user_id)
   let reviewExists = 0
   const reviews = await Reviews.find({user: user_id})
@@ -35,14 +37,14 @@ const addReview = async(req, res) => {
       reviewExists ++
     }
   }
-  // console.log("Flag", reviewExists)
+  console.log("Flag", reviewExists)
   if (reviewExists === 0){
     const movieReview = await Reviews.create({
       review: review,
       user: user_id,
       movie: movie_id
     })
-    res.status(200).json({review: movieReview})
+    res.status(200).json({review: "Review is added"})
   }else{
     res.status(200).json({review: "You have already reviewed this movie"})
   }

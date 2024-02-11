@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../model/userModel");
 
 // Middleware for user authentication using JWT
-const authentication = async (req, res, next) => {
+const adminauth = async (req, res, next) => {
   try {
     // Retrieve the JWT token from the 'Authorization' cookie in the request
     const token = req.cookies?.Authorization;
@@ -27,18 +27,16 @@ const authentication = async (req, res, next) => {
 
     // Retrieve the user information from the database using the user ID in the token
     const user = await User.findById(decoded.sub);
-
-    console.log("Inside auth middleware", user)
+    console.log("user", user)
 
     // If no user is found, respond with a 401 status and throw an error
-    if (!user) {
+    if (!user || !user.is_admin)  {
       res.status(401);
       throw new Error("Unauthorized user");
     }
 
     // Attach the user information to the request object for later use in route handlers
     req.user = user;
-
 
     // Continue to the next middleware or route handler
     next();
@@ -49,4 +47,4 @@ const authentication = async (req, res, next) => {
 };
 
 // Exporting the authentication middleware for use in other modules
-module.exports = authentication;
+module.exports = adminauth;

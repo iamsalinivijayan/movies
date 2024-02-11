@@ -8,7 +8,7 @@ const Dashboard = () => {
   console.log("Context from dashboard",user)
 
   return (
-    <div className='dashboard-img'>
+    <div>
       <MovieList/>
     </div>
   )

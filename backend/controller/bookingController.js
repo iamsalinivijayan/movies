@@ -1,6 +1,27 @@
 const Booking = require('../model/bookingModel'); // importing Booking collection from bookingModel
 const Seats = require('../model/seatModel'); // importing Seats collection
 const nodemailer = require('nodemailer'); //importing nodemailer for sending email as booking response
+const Shows = require('../model/showModel');
+
+// get all shows for a movie
+const getShows = async(req, res) => {
+    console.log("inside get shows", req.params)
+    const {_movie_id} = req.params
+    console.log("Request", req.params)
+
+    const shows = await Shows.find({movie: _movie_id})
+    console.log("Shows fetched", shows)
+    res.status(200).json({"Shows": shows})
+}
+
+// get all seats from a show
+const getSeats = async(req, res) => {
+    const {_show_id} = req.params
+
+    const seats = await Seats.find({show: _show_id})
+
+    res.status(200).json({"Seats": seats})
+}
 
 
 // For creating booking
@@ -88,7 +109,7 @@ const getBooking = async(req, res) => {
 // To delete booking
 const deleteBooking = async(req, res) => {
     const {booking_id, show_id} = req.body
-
+    console.log("Request", req.body)
     const booking = await Booking.findById(booking_id)
     const seats = booking.seats
     for(let seat of seats){
@@ -101,4 +122,4 @@ const deleteBooking = async(req, res) => {
 
 }
 
-module.exports = {createBooking, getAllBookings, getBooking, deleteBooking}
+module.exports = {getShows, getSeats, createBooking, getAllBookings, getBooking, deleteBooking}

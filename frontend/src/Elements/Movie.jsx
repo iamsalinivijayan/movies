@@ -58,9 +58,9 @@ export default function Movie({movie_id}) {
   return (
     <Fragment>
       {/* Button to trigger opening the dialog */}
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <button className='btn-details' variant="outlined" onClick={handleClickOpen}>
         View details
-      </Button>
+      </button>
       
       {/* Dialog component for displaying movie details */}
       <Dialog
@@ -70,7 +70,7 @@ export default function Movie({movie_id}) {
         TransitionComponent={Transition}
       >
         {/* App bar for the dialog */}
-        <AppBar sx={{ position: 'relative', backgroundColor: '#474F7A'}}>
+        <AppBar sx={{ position: 'relative', backgroundColor: '#3D0C11'}}>
           {/* Toolbar with close button, title, and another button for closing the dialog */}
           <Toolbar>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
@@ -90,15 +90,29 @@ export default function Movie({movie_id}) {
         <List>
           {/* Checking if movieDetails is available before rendering */}
           {movieDetails && (
-            <div>
+            <div className='movie-details' style={{textAlign: 'center'}}>
+              {/* List item for displaying movie image */}
+              <div className='image-container'>
+              <img alt='' src={`http://localhost:3001/${movieDetails.image}`}/>
+              </div>
+
               {/* List item for displaying movie name */}
               <ListItemText primary={`Title: ${movieDetails.movie_name}`} />
-              <Divider />
+              
               {/* List item for displaying language of the movie */}
-              <ListItemText primary={`Director: ${movieDetails.language}`} />
-              <Divider />
+              <ListItemText primary={`Language: ${movieDetails.language}`} />
+
+              {/* List item for displaying category */}
+              <ListItemText primary={`Category: ${movieDetails.category}`} />
+              
               {/* List item for displaying rating */}
-              <ListItemText primary={`Release Date: ${movieDetails.rating}`} />
+              <ListItemText primary={`Rating: ${movieDetails.rating}`} />
+
+              {/* List item for displaying price */}
+              <ListItemText primary={`Ticket Price: ${movieDetails.price}`} />
+
+
+
             </div>
           )}
         </List>

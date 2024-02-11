@@ -67,7 +67,11 @@ const Login = () => {
         console.log("User context after",user)
         console.log('Response:', response)
         // navigating to customer dashboard
-        navigate('/dashboard');
+        if(response.data.isAdmin) {
+          navigate('/admin/dashboard')
+        } else{
+          navigate('/dashboard');
+        }
         }
         
       } catch (error) {

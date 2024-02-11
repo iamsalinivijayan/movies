@@ -1,23 +1,54 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemButton from '@mui/material/ListItemButton';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
+import { TextField } from '@mui/material';
+import { useState } from 'react';
+import axios from 'axios';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Review() {
-  const [open, setOpen] = React.useState(false);
+export default function Review({movieId, userId}) {
+  console.log('Movie', movieId)
+  console.log('User', userId)
+
+  const [open, setOpen] = useState(false);
+
+  const [data, setData] = useState({
+    review: ''
+  })
+
+  const [movieReview, setMovieReview] = useState([])
+
+  const handleReview = (e) => {
+    const { name, value } = e.target;
+    setData({
+      ...data,
+      [name]: value,
+    });
+  };
+
+  const addReview = async(e) => {
+    e.preventDefault()
+    console.log('UserId from review', userId)
+    console.log('MovieId from review', movieId)
+    const review = await axios.post(`http://localhost:3001/customer/movies/review`, {
+      review: data.review ,
+      user_id: userId,
+      movie_id: movieId
+    }, {withCredentials: true})
+    setMovieReview(review.data)
+    alert(review.data.review)
+
+    console.log("Review", review.data)
+  }
+
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -29,16 +60,16 @@ export default function Review() {
 
   return (
     <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Add review
-      </Button>
+      <button className='btn-review' variant="outlined" onClick={handleClickOpen}>
+        Reviews
+      </button>
       <Dialog
         fullScreen
         open={open}
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: 'relative' }}>
+        <AppBar sx={{ position: 'relative', backgroundColor: '#3D0C11'}}>
           <Toolbar>
             <IconButton
               edge="start"
@@ -48,15 +79,15 @@ export default function Review() {
             >
               <CloseIcon />
             </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Review
-            </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
-              save
-            </Button>
           </Toolbar>
         </AppBar>
-        
+        <div className='review-container'>
+        <form className='form-container' onSubmit={addReview}>
+            <label><h1>Review</h1></label>
+            <input className='add-review-input' type='text' placeholder='Type here' name='review' onChange={handleReview}/>
+            <button className='add-review-btn'> Add Review</button>
+        </form>
+        </div>
       </Dialog>
     </React.Fragment>
   );

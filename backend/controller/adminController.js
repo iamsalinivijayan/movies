@@ -1,6 +1,7 @@
 const Shows = require('../model/showModel');
 const Seats = require('../model/seatModel');
 const Movies = require('../model/movieModel');
+const fs = require('fs')
 
 const addShow = async(req, res) => {
     const {show_time, show_date, movie_id, number_of_seats} = req.body
@@ -17,7 +18,7 @@ const seatArray = createSeats(number_of_seats, show._id)
 // console.log("Seats created", seatArray)
 const seats = await Seats.insertMany(seatArray)
 // console.log("Seats inserted", seats)
-res.status(200).json({message: "show created"})
+res.status(200).json(show)
     
 }
 
@@ -47,35 +48,75 @@ for (let i of letters){
 return seats
 }
 
+
+const deleteShow = async(req, res) => {
+    
+    const {_id} = req.params
+
+    const show = await Shows.findByIdAndDelete(_id)
+    console.log("Show got deleted", show)
+    res.status(200).json(show)
+}
+
 const getMovies = async(req, res) => {
     const movies = await Movies.find()
-    res.status(200).json({Movies: movies})
+    res.status(200).json({movies})
 }
 
 const addMovie = async(req,res) => {
-    const {movie_name, category, language, image, rating, price} =req.body
+    const {movie_name, category, language, rating, price} =req.body
+    console.log("request body",req.body)
+    console.log("request file", req.file)
+
+    try {
+        let filepath = ''
+        if(req.file ){
+            const filenameParts = req.file.originalname.split('.')
+            const extension = filenameParts.pop()
+            const path = req.file.path
+            filepath = path+ '.' +extension
+            fs.renameSync(path, filepath)
+
+            const movie = await Movies.create({
+                movie_name: movie_name,
+                category: category,
+                language: language,
+                image: filepath,
+                rating: rating,
+                price: price
+            })
+            res.status(200).json({Movies: movie})
+        }
+    } catch (error) {
+        console.log("Error", error)
+        res.status(400).json("Something went wrong")
+    }
     
-    const movie = await Movies.create({
-        movie_name: movie_name,
-        category: category,
-        language: language,
-        image: image,
-        rating: rating,
-        price: price
-    })
-    res.status(200).json({Movies: movie})
 }
 const editMovie = async(req,res) => {
     const {_id} =req.params
     const {movie_name, category, language, image, rating, price} =req.body
-    const updatedMovie = await Movies.findByIdAndUpdate(_id, {
+    let filepath = ''
+        if(req.file ){
+            const filenameParts = req.file.originalname.split('.')
+            const extension = filenameParts.pop()
+            const path = req.file.path
+            filepath = path+ '.' +extension
+            fs.renameSync(path, filepath)
+        }
+        const movieObj = {
         movie_name: movie_name,
         category: category,
         language: language,
-        image: image,
         rating: rating,
         price: price
-    }, {returnDocument: 'after'})
+        }
+
+        if(filepath.length > 0){
+            movieObj.image = filepath
+        }
+
+    const updatedMovie = await Movies.findByIdAndUpdate(_id, movieObj, {returnDocument: 'after'})
     // console.log("movie edited")
     res.status(200).json({"Updated movie": updatedMovie})
     
@@ -84,7 +125,7 @@ const deleteMovie = async(req,res) => {
     const {_id} = req.params
     const deletedMovie = await Movies.findByIdAndDelete(_id)
     // console.log("movie deleted")
-    res.status(200).json({"Movie got deleted": deletedMovie})
+    res.status(200).json(deletedMovie)
 }
 
-module.exports = {addShow, addMovie, getMovies, editMovie, deleteMovie}
+module.exports = {addShow, deleteShow, addMovie, getMovies, editMovie, deleteMovie}

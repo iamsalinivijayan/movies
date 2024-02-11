@@ -24,7 +24,7 @@ const login = async (req, res, next) => {
         } 
         // if passwords match token is generated
         else {
-            const expTime = Date.now() + 1000 * 60 * 60 ;
+            const expTime = Date.now() + 1000 * 60 * 60 * 2;
             const token = jwt.sign({
                 sub: user._id,
                 email: user.email,
@@ -33,6 +33,8 @@ const login = async (req, res, next) => {
             process.env.JWT_SECRET   
             );
 
+            let isAdmin = user.is_admin
+
         // set the token as http-only cookie
         res.cookie("Authorization", token, {
             httpOnly: true,
@@ -40,7 +42,7 @@ const login = async (req, res, next) => {
             sameSite: "lax",
         });
           // Respond with a success message
-    res.status(200).json({ message: "Login successful" });
+    res.status(200).json({ message: "Login successful", isAdmin: isAdmin });
     // console.log(token)
         }
     }
@@ -82,7 +84,7 @@ const checkAuthController = async (req, res) => {
       }
   
       // Respond with the user ID
-      res.status(200).json({ id: user._id , email: user.email});
+      res.status(200).json({ id: user._id , email: user.email, isAdmin: user.is_admin});
     } catch (error) {
       console.log(error);
     }

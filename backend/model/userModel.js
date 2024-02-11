@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  is_admin: {
+    type: Boolean,
+    default: false
+  }
 });
 
 // Creating a 'User' model using the user schema
