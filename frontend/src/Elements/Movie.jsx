@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { useState , Fragment} from 'react';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import ListItemText from '@mui/material/ListItemText';
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -12,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import axios from 'axios';
+
 
 
 // Custom Transition component for the Dialog
@@ -98,6 +97,9 @@ export default function Movie({movie_id}) {
 
               {/* List item for displaying movie name */}
               <ListItemText primary={`Title: ${movieDetails.movie_name}`} />
+
+              {/* List item for displaying Cast details */}
+              <ListItemText primary={`Cast: ${movieDetails.cast}`} />
               
               {/* List item for displaying language of the movie */}
               <ListItemText primary={`Language: ${movieDetails.language}`} />
@@ -110,7 +112,6 @@ export default function Movie({movie_id}) {
 
               {/* List item for displaying price */}
               <ListItemText primary={`Ticket Price: ${movieDetails.price}`} />
-
 
 
             </div>

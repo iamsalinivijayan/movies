@@ -329,6 +329,7 @@ input[type=text]:focus, input[type=password]:focus {
 .movie-card-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
 }
 
 .movie-card-container .movie-card{
@@ -480,7 +481,23 @@ input[type=text]:focus, input[type=password]:focus {
   color: white;
 }
 
+.rating-container{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   font-size: 25px;
+}
 
+.rating-container .radio{
+  display: none;
+}
 
+.rating-container .rating{
+  cursor: pointer;
+}
+
+.admin-movie-list-container h4{
+  text-align: center;
+}
 
 

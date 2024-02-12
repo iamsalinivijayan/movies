@@ -59,6 +59,8 @@ const createBooking = async(req,res) => {
             user: user_id,
             show: show_id,
             seats: seat_names,
+            count: seat_names.length,
+            date: new Date().toISOString().slice(0, 10)
     
         })
         const bookingMail = {

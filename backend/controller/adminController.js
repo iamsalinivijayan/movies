@@ -1,6 +1,8 @@
 const Shows = require('../model/showModel');
 const Seats = require('../model/seatModel');
 const Movies = require('../model/movieModel');
+const Reviews = require('../model/reviewModel')
+const Bookings = require('../model/bookingModel');
 const fs = require('fs')
 
 const addShow = async(req, res) => {
@@ -59,12 +61,49 @@ const deleteShow = async(req, res) => {
 }
 
 const getMovies = async(req, res) => {
+    const date = new Date().toISOString().slice(0, 10)
     const movies = await Movies.find()
-    res.status(200).json({movies})
+    const averageRatings = await Reviews.aggregate([
+        {
+          $group: {
+            _id: '$movie',
+            avg_rating: {
+              $avg: '$rating'
+            }
+          }
+        }
+      ])
+      console.log("Ratings", averageRatings)
+
+      for (let movie of movies){
+        for(let rating of averageRatings){
+            if( movie._id.toString() === rating._id.toString()){
+                movie.rating = rating.avg_rating
+            }
+        }
+      }
+      console.log("Movies", movies)
+    const bookedSeats = await Bookings.aggregate([
+        {
+            $match: {
+                date: new Date(date)
+            }
+        },
+        {
+            $group: {
+                _id: null,
+                total_bookings: {
+                    $sum: '$count'
+                }
+            }
+        }
+    ])
+    console.log("Seats Sold", bookedSeats)
+    res.status(200).json({Movies: movies, SeatsSold: bookedSeats[0].total_bookings})
 }
 
 const addMovie = async(req,res) => {
-    const {movie_name, category, language, rating, price} =req.body
+    const {movie_name, category, language, rating, price, cast} =req.body
     console.log("request body",req.body)
     console.log("request file", req.file)
 
@@ -79,6 +118,7 @@ const addMovie = async(req,res) => {
 
             const movie = await Movies.create({
                 movie_name: movie_name,
+                cast: cast,
                 category: category,
                 language: language,
                 image: filepath,
@@ -95,7 +135,7 @@ const addMovie = async(req,res) => {
 }
 const editMovie = async(req,res) => {
     const {_id} =req.params
-    const {movie_name, category, language, image, rating, price} =req.body
+    const {movie_name, category, language, image, rating, price, cast} =req.body
     let filepath = ''
         if(req.file ){
             const filenameParts = req.file.originalname.split('.')
@@ -106,6 +146,7 @@ const editMovie = async(req,res) => {
         }
         const movieObj = {
         movie_name: movie_name,
+        cast: cast,
         category: category,
         language: language,
         rating: rating,
@@ -128,4 +169,26 @@ const deleteMovie = async(req,res) => {
     res.status(200).json(deletedMovie)
 }
 
-module.exports = {addShow, deleteShow, addMovie, getMovies, editMovie, deleteMovie}
+const soldTickets = async(req,res) => {
+    const {date} = req.body
+    const bookedSeats = await Bookings.aggregate([
+        {
+            $match: {
+                date: new Date(date)
+            }
+        },
+        {
+            $group: {
+                _id: null,
+                total_bookings: {
+                    $sum: '$count'
+                }
+            }
+        }
+    ])
+
+    console.log("Seats Sold", bookedSeats)
+    res.status(200).json(bookedSeats)
+
+}
+module.exports = {addShow, deleteShow, addMovie, getMovies, editMovie, deleteMovie, soldTickets}

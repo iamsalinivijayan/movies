@@ -1,17 +1,37 @@
 const Movies = require('../model/movieModel'); //Importing model of movies
 const Reviews = require('../model/reviewModel'); //Importing the review model
+const mongoose = require('mongoose')
 
 // function to fetch a particular movie
 const getMovie = async (req, res) => {
   try {
     console.log(req.params)
     const movieId = req.params._id;
+    const target_movie = new mongoose.Types.ObjectId(movieId)
+    console.log("Target movie", target_movie)
+    const average = await Reviews.aggregate([
+      {
+        $match: {
+          movie: target_movie
+        }
+      },
+      {
+        $group: {
+          _id: '$movie',
+          avg_rating: {
+            $avg: '$rating'
+          }
+        }
+      }
+    ])
+    console.log("Average", average)
     if (!movieId) {
       return res.status(400).json({ message: 'Invalid movieId' });
     }
     console.log('Movie ID:', movieId); // Log the movieId on the server side
     const movie = await Movies.findById(movieId);
     console.log('Movie Details:', movie); // Log the movie details
+    movie.rating = average[0].avg_rating
     res.status(200).json(movie);
   } catch (error) {
     console.error('Error fetching movie details:', error);
@@ -22,7 +42,7 @@ const getMovie = async (req, res) => {
 
 // function to add review
 const addReview = async(req, res) => {
-  const {review, user_id, movie_id} = req.body
+  const {review, user_id, movie_id, rating} = req.body
   console.log("request", req.body)
   // console.log("user id", user_id)
   let reviewExists = 0
@@ -41,6 +61,7 @@ const addReview = async(req, res) => {
   if (reviewExists === 0){
     const movieReview = await Reviews.create({
       review: review,
+      rating: rating,
       user: user_id,
       movie: movie_id
     })

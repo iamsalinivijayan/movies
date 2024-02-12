@@ -19,7 +19,7 @@ const Seats = () => {
       
       const seatsArray = await axios.get(`http://localhost:3001/customer/show/${showId}`, {withCredentials: true})
       console.log("Seats array", seatsArray)
-      setSeats(seatsArray.data.Seats)
+      setSeats(seatsArray.data.Seats.sort())
     };
 
     const selectSeat = (seat) => {

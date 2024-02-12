@@ -5,9 +5,9 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-import { TextField } from '@mui/material';
 import { useState } from 'react';
 import axios from 'axios';
+import { FaStar } from "react-icons/fa";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -18,13 +18,14 @@ export default function Review({movieId, userId}) {
   console.log('User', userId)
 
   const [open, setOpen] = useState(false);
-
+  const [rate, setRate] = useState(null);
   const [data, setData] = useState({
     review: ''
   })
 
   const [movieReview, setMovieReview] = useState([])
-
+  
+  console.log("Rating", rate)
   const handleReview = (e) => {
     const { name, value } = e.target;
     setData({
@@ -39,6 +40,7 @@ export default function Review({movieId, userId}) {
     console.log('MovieId from review', movieId)
     const review = await axios.post(`http://localhost:3001/customer/movies/review`, {
       review: data.review ,
+      rating: rate,
       user_id: userId,
       movie_id: movieId
     }, {withCredentials: true})
@@ -85,7 +87,32 @@ export default function Review({movieId, userId}) {
         <form className='form-container' onSubmit={addReview}>
             <label><h1>Review</h1></label>
             <input className='add-review-input' type='text' placeholder='Type here' name='review' onChange={handleReview}/>
-            <button className='add-review-btn'> Add Review</button>
+            <div className="rating-container">
+			{[...Array(5)].map((item, index) => {
+				const givenRating = index + 1;
+				return (
+					<label>
+					<input className="radio"
+							type="radio"
+							value={givenRating}
+							onClick={() => {
+								setRate(givenRating);
+							}}
+						/>
+						<div className="rating">
+							<FaStar
+								color={
+									givenRating < rate || givenRating === rate
+										? "rgb(255,255,153)"
+										: "rgb(211,211,211)"
+								}
+							/>
+						</div>	
+					</label>
+				);
+			})}
+		</div>
+          <button className='add-review-btn'> Add Review</button>
         </form>
         </div>
       </Dialog>

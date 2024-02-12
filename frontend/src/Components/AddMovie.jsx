@@ -8,9 +8,9 @@ const AddMovie = () => {
 
     const [movieData, setMovieData] = useState({
         movieName: '',
+        cast: '',
         category: '',
         language: '', 
-        rating: '',
         price: ''
     })
     const [image, setImage] = useState('')
@@ -19,9 +19,9 @@ const AddMovie = () => {
     e.preventDefault()
         const data = new FormData()
         data.append('movie_name', movieData.movieName )
+        data.append('cast', movieData.cast)
         data.append('category', movieData.category)
         data.append('language', movieData.language)
-        data.append('rating', movieData.rating)
         data.append('price', movieData.price)
         data.append('file', image[0])
 
@@ -54,8 +54,8 @@ const AddMovie = () => {
         <form className='add-movie-form' onSubmit={addMovie}>
         <input className='movie-image' placeholder='Movie image' name='movieImage' type='file' onChange={(e) => {setImage(e.target.files)}}/>
         <input className='movie-name' placeholder='Movie name' name='movieName' value={movieData.movieName} type='text' onChange={handleChange}/>
+        <input className='cast' placeholder='Cast members (comma seperated)' name='cast' value={movieData.cast} type='text' onChange={handleChange} />
         <input className='category' placeholder='Category' name='category' value={movieData.category} type='text' onChange={handleChange}/>
-        <input className='rating' placeholder='Rating' name='rating' value={movieData.rating} type='text' onChange={handleChange}/>
         <input className='language' placeholder='Language' name='language' value={movieData.language} type='text' onChange={handleChange}/>
         <input className='price' placeholder='Ticket Price' name='price' value={movieData.price} type='number'onChange={handleChange}/>
         <button className='add-movie-btn' type='submit'>Add Movie</button>

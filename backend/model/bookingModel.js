@@ -16,6 +16,12 @@ const bookingSchema = new mongoose.Schema({
     seats:{
         type: [String]
     },
+    date:{
+        type: Date
+    },
+    count:{
+        type: Number
+    },
     show: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: "Shows"

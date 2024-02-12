@@ -9,6 +9,10 @@ const movieSchema = new mongoose.Schema({
     required: true,
     index: true
   },
+  // Cast details
+  cast:{
+    type: String
+  },
   // movie category (UA, A, PG)
   category: {
     type: String,

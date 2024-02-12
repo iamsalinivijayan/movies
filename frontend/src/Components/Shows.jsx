@@ -12,7 +12,6 @@ const Shows = () => {
   useEffect(()=> {
     getShows();
    },[]) 
-
   const getShows = async () => {
     const shows = await axios.get(`http://localhost:3001/customer/movie/${movieId}`, {withCredentials: true})
     setShows(shows.data.Shows)

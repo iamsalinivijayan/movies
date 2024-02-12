@@ -1,5 +1,3 @@
-const array = [1, 2, 3, 4, 5]
+const today = new Date('2024-02-11')
 
-const last = array.pop()
-
-console.log(last)
+console.log(today)

@@ -12,6 +12,7 @@ const MoviesPage = () => {
   console.log("Context from dashboard",user)
   // State to hold the list of movies
   const [movies, setMovies] = useState([]);
+  const [soldTickets, setSoldTickets] = useState(null)
 
   const navigate = useNavigate()
 
@@ -19,7 +20,9 @@ const MoviesPage = () => {
     const response = await axios.get('http://localhost:3001/admin/movie', {withCredentials: true})
     console.log("Fetched movies:",response.data.movies)
     console.log(response.status)
-      setMovies(response.data.movies)
+      setMovies(response.data.Movies)
+      setSoldTickets(response.data.SeatsSold)
+
   }
 
   const editMovie = (movie_id) => {
@@ -38,7 +41,9 @@ const MoviesPage = () => {
 
   // JSX rendering of the MovieList component
   return (
-     <div className='movie-card-container'>
+     <div className='admin-movie-list-container'>
+     {soldTickets !== null && <h4>{`Tickets sold today: ${soldTickets}`}</h4>}
+      <div className='movie-card-container'>
      { movies.map((movie) => {
         return (
         <div className='movie-card'>
@@ -53,9 +58,9 @@ const MoviesPage = () => {
         )
         
      })
-     }
-         
+     }   
         
+     </div>
      </div>
   );
 };
